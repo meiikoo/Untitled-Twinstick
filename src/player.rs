@@ -177,6 +177,7 @@ pub fn player_orientation(
 }
 
 pub fn player_damage(
+    mut next_state: ResMut<NextState<GameState>>,
     mut events: EventReader<DamagePlayerEvent>,
     mut players: Query<(Entity, &mut Health), With<Player>>,
     mut commands: Commands,
@@ -186,6 +187,7 @@ pub fn player_damage(
             if damage_event.target == player {
                 player_health.damage(damage_event.amount);
                 if player_health.is_dead() {
+                    next_state.set(GameState::GameOver);
                     commands.entity(player).despawn();
                 }
             }
